@@ -13,6 +13,13 @@
 -- Answer: 233168
 --
 
+module Main (
+  validate,
+  solve,
+  main
+) where 
+
+
 validate :: Int -> Bool
 validate x = (mod x 3 == 0) || (mod x 5 == 0)
 

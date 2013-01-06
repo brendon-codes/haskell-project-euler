@@ -10,22 +10,34 @@
 -- Answer: 6857
 --
 
+module Main (
+  validator,
+  modded,
+  cyc,
+  filtr,
+  dv,
+  solve,
+  main
+) where 
 
-modded n = filter (\x -> n `mod` x == 0) (2:[3,5..])
+
+validator n x = (n `mod` x == 0)
+
+
+modded n = filter (validator n) (2:[3,5..])
 
 
 cyc n = scanl1 (*) (modded n)
 
 
-filtr = takeWhile (<=n) (cyc n)
-  where
-    n = 600851475143
+filtr n = takeWhile (<=n) (cyc n)
 
 
 dv m = (m !! 0) `div` (m !! 1)
 
 
-solve = dv $ reverse $ filtr
+solve = dv $ reverse $ filtr n
+  where n = 600851475143
 
 
 main :: IO ()

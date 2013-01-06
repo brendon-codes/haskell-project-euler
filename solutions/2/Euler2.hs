@@ -17,6 +17,15 @@
 -- Answer: 4613732
 --
 
+module Main (
+  fibs,
+  evenFibs,
+  limitFibs,
+  solve,
+  main
+) where 
+
+
 fibs :: [Int]
 fibs = [1, 2] ++ zipWith (+) fibs (tail fibs)
 
@@ -25,12 +34,13 @@ evenFibs :: [Int]
 evenFibs = filter even fibs
 
 
-limitFibs :: [Int]
-limitFibs = takeWhile (<4000000) evenFibs
+limitFibs :: Int -> [Int]
+limitFibs x = takeWhile (<x) evenFibs
 
 
 solve :: Int
-solve = sum $ limitFibs
+solve = sum $ limitFibs n
+  where n = 4000000
 
 
 main :: IO ()
