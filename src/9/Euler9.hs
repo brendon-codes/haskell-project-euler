@@ -26,16 +26,21 @@ module Main (
 ) where
 
 
-triplets m = [[a, b, c]
-             | c <- [1..m],
-               b <- [1..c],
-               a <- [1..b],
-               a + b + c == m,
-               a^2 + b^2 == c^2]
+triplets :: Int -> [(Int, Int, Int)]
+triplets m = [(x, y, z)
+             | z <- [1..m],
+               y <- [1..z],
+               x <- [1..y],
+               x + y + z == m,
+               x^2 + y^2 == z^2]
+
+
+tripleToList :: (Int, Int, Int) -> [Int]
+tripleToList (x, y, z) = [x, y, z]
 
 
 solve :: Int
-solve = product $ head $ triplets m
+solve = product $ tripleToList $ head $ triplets m
   where
     m = 1000
 
