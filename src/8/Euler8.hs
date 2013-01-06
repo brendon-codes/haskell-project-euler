@@ -1,7 +1,7 @@
 --
 -- Project Euler
 --
--- Problem #7
+-- Problem #8
 -- Largest product in a series
 --
 --   Find the greatest product of five consecutive digits
