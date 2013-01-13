@@ -86,7 +86,7 @@ import qualified Data.Array as Arr
 --
 rows ar = out
   where
-    ((start,_), (end,_)) = Arr.bounds ar
+    ((_,start), (_,end)) = Arr.bounds ar
     ranger = [start..end]
     out = map inner ranger
     inner i = [v | ((y, x), v) <- (Arr.assocs ar), x == i]
@@ -94,7 +94,7 @@ rows ar = out
 
 cols ar = out
   where
-    ((_,start), (_,end)) = Arr.bounds ar
+    ((start,_), (end,_)) = Arr.bounds ar
     ranger = [start..end]
     out = map inner ranger
     inner i = [v | ((y, x), v) <- (Arr.assocs ar), y == i]
