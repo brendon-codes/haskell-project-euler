@@ -43,7 +43,7 @@ module Main (
 ) where
 
 
-import qualified Data.Array as Arr
+-- import qualified Data.Array as Arr
 
 
 --
@@ -77,27 +77,53 @@ import qualified Data.Array as Arr
 
 
 --
--- Rows Indices
+-- 01 02 03 04
+-- 05 06 07 08
+-- 09 10 11 12
+-- 13 14 15 16
 --
+
+cycleEvery n xs = map (every n xs) [startIndex..endIndex]
+                  where startIndex = 0
+                        endIndex = (length xs) - 1
+
+--
+-- Taken from:
+-- http://stackoverflow.com/questions/2026912
+--   /how-to-get-every-nth-element-of-an-infinite-list-in-haskell
+--   #comment1953282_2028758
+--
+every n xs start = map head $
+                   takeWhile (not . null) $
+                   iterate (drop n) $
+                   (drop start xs)
+
+--
+-- Get diagonals
+--
+-- See: http://stackoverflow.com/a/3999673/552766
+--
+-- diags :: (Arr.Ix i) => Arr.Array (i, i) e -> [e]
+-- diags xs = [v | ((y, x), v) <- Arr.assocs xs, y == x]
 
 
 --
 -- Get list of rows from a Arr.Array
 --
-rows ar = out
-  where
-    ((_,start), (_,end)) = Arr.bounds ar
-    ranger = [start..end]
-    out = map inner ranger
-    inner i = [v | ((y, x), v) <- (Arr.assocs ar), x == i]
+-- rows ar = out
+--   where
+--     ((_,start), (_,end)) = Arr.bounds ar
+--     ranger = [start..end]
+--     out = map inner ranger
+--     inner i = [v | ((y, x), v) <- (Arr.assocs ar), x == i]
 
 
-cols ar = out
-  where
-    ((start,_), (end,_)) = Arr.bounds ar
-    ranger = [start..end]
-    out = map inner ranger
-    inner i = [v | ((y, x), v) <- (Arr.assocs ar), y == i]
+-- cols ar = out
+--   where
+--     ((start,_), (end,_)) = Arr.bounds ar
+--     ranger = [start..end]
+--     out = map inner ranger
+--     inner i = [v | ((y, x), v) <- (Arr.assocs ar), y == i]
 
 
 --
