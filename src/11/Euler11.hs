@@ -83,9 +83,22 @@ module Main (
 -- 13 14 15 16
 --
 
+
+pairs xs = zip [0..] xs
+
 cycleEvery n xs = map (every n xs) [startIndex..endIndex]
                   where startIndex = 0
                         endIndex = (length xs) - 1
+
+
+adjacents width pairs = out
+  where
+    (start, _) = head pairs
+    out = takeWhile isAdj pairs
+    isAdj (i, _) = (getPos i) >= startPos
+    getPos i = i `mod` width
+    startPos = getPos start
+
 
 --
 -- Taken from:
@@ -97,6 +110,17 @@ every n xs start = map head $
                    takeWhile (not . null) $
                    iterate (drop n) $
                    (drop start xs)
+
+
+slideCount width = width + 1
+
+
+solve xs width = adjs
+  where
+    adjs = map (adjacents width) pr
+    pr = pairs xs
+    cycles = cycleEvery slide pr
+    slide = slideCount width
 
 --
 -- Get diagonals
