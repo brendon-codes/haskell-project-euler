@@ -115,12 +115,39 @@ every n xs start = map head $
 slideCount width = width + 1
 
 
-solve xs width = adjs
+allSeqs prs width = adjs
+   where
+     adjs = map (adjacents width) cycles
+     cycles = cycleEvery slide prs
+     slide = slideCount width
+
+
+seqs xs width = out
   where
-    adjs = map (adjacents width) pr
-    pr = pairs xs
-    cycles = cycleEvery slide pr
-    slide = slideCount width
+    prs = pairs xs
+    out = allSeqs prs width
+
+
+buildSeqs xs width sampleLen = pruned
+  where
+    sqs = seqs xs width
+    pruned = filter pruner sqs
+    pruner x = (length x) >= sampleLen
+
+
+seqsOutput xs width sampleLen = out
+  where
+    s = buildSeqs xs width sampleLen
+    out = map (take sampleLen) s
+    
+
+solve xs = seqsOutput xs width sampleLen
+  where
+    width = 4
+    sampleLen = 3
+        
+        
+
 
 --
 -- Get diagonals
