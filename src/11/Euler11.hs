@@ -86,16 +86,18 @@ module Main (
 
 pairs xs = zip [0..] xs
 
-cycleEvery n xs = map (every n xs) [startIndex..endIndex]
-                  where startIndex = 0
-                        endIndex = (length xs) - 1
+cycleEvery n xs = map (every n xs) [startIndex..endIndex] 
+  where
+    startIndex = 0
+    endIndex = (length xs) - 1
 
 
-adjacents width pairs = out
+adjacents dir width pairs = out
   where
     (start, _) = head pairs
     out = takeWhile isAdj pairs
-    isAdj (i, _) = (getPos i) >= startPos
+    isAdj (i, _) = ((op dir) (getPos i) startPos)
+    op d | d > 0 = (>=) | d < 0 = (<=) | otherwise = (==)
     getPos i = i `mod` width
     startPos = getPos start
 
@@ -115,23 +117,30 @@ every n xs start = map head $
 slideCount width = width + 1
 
 
-allSeqs prs width = adjs
+allSeqs prs width dir = adjs
    where
-     adjs = map (adjacents width) cycles
+     adjs = map (adjacents dir width) cycles
      cycles = cycleEvery slide prs
-     slide = slideCount width
+     slide = width + dir
 
 
-seqs xs width = out
+seqs xs width dir = out
   where
     prs = pairs xs
-    out = allSeqs prs width
+    out = allSeqs prs width dir
+
+
+profiles xs width = out
+  where
+    s = seqs xs width
+    p = [(s 1), (s (-1)), (s 0)]
+    out = concat p
 
 
 buildSeqs xs width sampleLen = pruned
   where
-    sqs = seqs xs width
-    pruned = filter pruner sqs
+    profs = profiles xs width
+    pruned = filter pruner profs
     pruner x = (length x) >= sampleLen
 
 
