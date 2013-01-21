@@ -86,10 +86,11 @@ module Main (
 
 pairs xs = zip [0..] xs
 
-cycleEvery n xs = map (every n xs) [startIndex..endIndex] 
+cycleEvery n xs = map (every n xs) iters 
   where
     startIndex = 0
     endIndex = (length xs) - 1
+    iters = [startIndex..endIndex]
 
 
 adjacents dir width pairs = out
@@ -112,9 +113,6 @@ every n xs start = map head $
                    takeWhile (not . null) $
                    iterate (drop n) $
                    (drop start xs)
-
-
-slideCount width = width + 1
 
 
 allSeqs prs width dir = adjs
