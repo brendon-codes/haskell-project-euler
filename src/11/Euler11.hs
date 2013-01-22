@@ -43,50 +43,22 @@ module Main (
 ) where
 
 
--- import qualified Data.Array as Arr
-
-
 --
 -- Parse Input
 --
--- input :: String -> [Int]
--- input x = map read (words x)
+input :: String -> [Int]
+input x = map read (words x)
 
 
 --
--- Build Matrix
+-- Build pairs from a list
 --
--- matrix :: [Int] -> Arr.Array (Int, Int) Int
--- matrix x = Arr.listArray ((start, start), (end, end)) x
---   where start = 1
---        end = 2
-
-
---
--- Builds Input Data
---
--- builder :: String -> Arr.Array (Int, Int) Int
--- builder = (matrix . input)
-
-
---
--- Get Verticals of an Array
---
--- verticals :: Arr.Array (Int, Int) Int -> [Int]
--- verticals x = [v | ((x, y), v) <- Arr.assocs r]
-
-
---
--- 01 02 03 04
--- 05 06 07 08
--- 09 10 11 12
--- 13 14 15 16
---
-
-
 pairs xs = zip [0..] xs
 
 
+--
+-- Get every iteration of "every"
+--
 cycleEvery n xs = map (every n xs) iters 
   where
     startIndex = 0
@@ -94,6 +66,10 @@ cycleEvery n xs = map (every n xs) iters
     iters = [startIndex..endIndex]
 
 
+--
+-- Get all visually adjacent elements in
+-- a fake matrix
+--
 adjacents dir width pairs = out
   where
     (start, _) = head pairs
@@ -104,6 +80,8 @@ adjacents dir width pairs = out
     startPos = getPos start
 
 
+--
+-- Get every "nth" element in "xs" beginning at "start"
 --
 -- Taken from:
 -- http://stackoverflow.com/questions/2026912
@@ -117,18 +95,27 @@ every n xs start =
   (drop start xs)
 
 
+--
+-- Construct all Sequences and filter to adjacents
+--
 allSeqs prs width dir slide = adjs
    where
      adjs = map (adjacents dir width) cycles
      cycles = cycleEvery slide prs
 
 
+--
+-- Build a Sequence
+--
 seqs xs width dir slide = sqPairs
   where
     prs = pairs xs
     sqPairs = allSeqs prs width dir slide
 
 
+--
+-- Build Profiles
+--
 profiles xs width = p
   where
     s = seqs xs width
@@ -143,6 +130,9 @@ profiles xs width = p
         (s 1 1) ]
 
 
+--
+-- Build Sequences
+--
 buildSeqs xs width sampleLen = pruned
   where
     profs = profiles xs width
@@ -151,13 +141,19 @@ buildSeqs xs width sampleLen = pruned
     pruner x = (length x) >= sampleLen
 
 
+--
+-- Get Sequences Output
+--
 seqsOutput xs width sampleLen = vals
   where
     s = buildSeqs xs width sampleLen
     truncd = map (take sampleLen) s
     vals = map (snd . unzip) truncd
-    
 
+
+--
+-- Calculate
+--
 calc xs width sampleLen = mx
   where
     vals = seqsOutput xs width sampleLen
@@ -165,48 +161,14 @@ calc xs width sampleLen = mx
     mx = maximum prods
 
 
-solve xs = calc xs width sampleLen
-  where
-    width = 4
-    sampleLen = 3
-        
-        
-
-
---
--- Get diagonals
---
--- See: http://stackoverflow.com/a/3999673/552766
---
--- diags :: (Arr.Ix i) => Arr.Array (i, i) e -> [e]
--- diags xs = [v | ((y, x), v) <- Arr.assocs xs, y == x]
-
-
---
--- Get list of rows from a Arr.Array
---
--- rows ar = out
---   where
---     ((_,start), (_,end)) = Arr.bounds ar
---     ranger = [start..end]
---     out = map inner ranger
---     inner i = [v | ((y, x), v) <- (Arr.assocs ar), x == i]
-
-
--- cols ar = out
---   where
---     ((start,_), (end,_)) = Arr.bounds ar
---     ranger = [start..end]
---     out = map inner ranger
---     inner i = [v | ((y, x), v) <- (Arr.assocs ar), y == i]
-
-
 --
 -- Solve
 --
--- solve :: String -> Arr.Array (Int, Int) Int
--- solve x = builder x
-
+solve xs = calc xs width sampleLen
+  where
+    width = 20
+    sampleLen = 4
+        
 
 --
 -- Main
@@ -214,6 +176,8 @@ solve xs = calc xs width sampleLen
 main :: IO ()
 main = do
   x <- getContents;
-  print "1";
+  let inp = input x;
+      out = solve inp;
+  print out;
 
 
