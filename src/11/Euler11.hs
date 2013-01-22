@@ -34,7 +34,7 @@
 --   same direction (up, down, left, right, or diagonally) in
 --   the 20×20 grid?
 --
--- Answer:
+-- Answer: 70600674
 --
 
 
@@ -53,12 +53,14 @@ input x = map read (words x)
 --
 -- Build pairs from a list
 --
+pairs :: [Int] -> [(Int, Int)]
 pairs xs = zip [0..] xs
 
 
 --
 -- Get every iteration of "every"
 --
+cycleEvery :: Int -> [(Int, Int)] -> [[(Int, Int)]]
 cycleEvery n xs = map (every n xs) iters 
   where
     startIndex = 0
@@ -70,6 +72,7 @@ cycleEvery n xs = map (every n xs) iters
 -- Get all visually adjacent elements in
 -- a fake matrix
 --
+adjacents :: Int -> Int -> [(Int, Int)] -> [(Int, Int)]
 adjacents dir width pairs = out
   where
     (start, _) = head pairs
@@ -88,6 +91,7 @@ adjacents dir width pairs = out
 --   /how-to-get-every-nth-element-of-an-infinite-list-in-haskell
 --   #comment1953282_2028758
 --
+every :: Int -> [(Int, Int)] -> Int -> [(Int, Int)]
 every n xs start =
   map head $
   takeWhile (not . null) $
@@ -98,6 +102,7 @@ every n xs start =
 --
 -- Construct all Sequences and filter to adjacents
 --
+allSeqs :: [(Int, Int)] -> Int -> Int -> Int -> [[(Int, Int)]]
 allSeqs prs width dir slide = adjs
    where
      adjs = map (adjacents dir width) cycles
@@ -107,6 +112,7 @@ allSeqs prs width dir slide = adjs
 --
 -- Build a Sequence
 --
+seqs :: [Int] -> Int -> Int -> Int -> [[(Int, Int)]]
 seqs xs width dir slide = sqPairs
   where
     prs = pairs xs
@@ -116,6 +122,7 @@ seqs xs width dir slide = sqPairs
 --
 -- Build Profiles
 --
+profiles :: [Int] -> Int -> [[[(Int, Int)]]]
 profiles xs width = p
   where
     s = seqs xs width
@@ -133,6 +140,7 @@ profiles xs width = p
 --
 -- Build Sequences
 --
+buildSeqs :: [Int] -> Int -> Int -> [[(Int, Int)]]
 buildSeqs xs width sampleLen = pruned
   where
     profs = profiles xs width
@@ -144,6 +152,7 @@ buildSeqs xs width sampleLen = pruned
 --
 -- Get Sequences Output
 --
+seqsOutput :: [Int] -> Int -> Int -> [[Int]]
 seqsOutput xs width sampleLen = vals
   where
     s = buildSeqs xs width sampleLen
@@ -154,6 +163,7 @@ seqsOutput xs width sampleLen = vals
 --
 -- Calculate
 --
+calc :: [Int] -> Int -> Int -> Int
 calc xs width sampleLen = mx
   where
     vals = seqsOutput xs width sampleLen
@@ -164,6 +174,7 @@ calc xs width sampleLen = mx
 --
 -- Solve
 --
+solve :: [Int] -> Int
 solve xs = calc xs width sampleLen
   where
     width = 20
