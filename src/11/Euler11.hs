@@ -123,10 +123,10 @@ allSeqs prs width dir slide = adjs
      cycles = cycleEvery slide prs
 
 
-seqs xs width dir slide = out
+seqs xs width dir slide = sqPairs
   where
     prs = pairs xs
-    out = allSeqs prs width dir slide
+    sqPairs = allSeqs prs width dir slide
 
 
 profiles xs width = p
@@ -151,13 +151,21 @@ buildSeqs xs width sampleLen = pruned
     pruner x = (length x) >= sampleLen
 
 
-seqsOutput xs width sampleLen = out
+seqsOutput xs width sampleLen = vals
   where
     s = buildSeqs xs width sampleLen
-    out = map (take sampleLen) s
+    truncd = map (take sampleLen) s
+    vals = map (snd . unzip) truncd
     
 
-solve xs = seqsOutput xs width sampleLen
+calc xs width sampleLen = mx
+  where
+    vals = seqsOutput xs width sampleLen
+    prods = map product vals
+    mx = maximum prods
+
+
+solve xs = calc xs width sampleLen
   where
     width = 4
     sampleLen = 3
