@@ -86,6 +86,7 @@ module Main (
 
 pairs xs = zip [0..] xs
 
+
 cycleEvery n xs = map (every n xs) iters 
   where
     startIndex = 0
@@ -99,7 +100,7 @@ adjacents dir width pairs = out
     out = takeWhile isAdj pairs
     isAdj (i, _) = ((op dir) (getPos i) startPos)
     op d | d > 0 = (>=) | d < 0 = (<=) | otherwise = (==)
-    getPos i = i `mod` width
+    getPos i = mod i width
     startPos = getPos start
 
 
@@ -109,36 +110,44 @@ adjacents dir width pairs = out
 --   /how-to-get-every-nth-element-of-an-infinite-list-in-haskell
 --   #comment1953282_2028758
 --
-every n xs start = map head $
-                   takeWhile (not . null) $
-                   iterate (drop n) $
-                   (drop start xs)
+every n xs start =
+  map head $
+  takeWhile (not . null) $
+  iterate (drop n) $
+  (drop start xs)
 
 
-allSeqs prs width dir = adjs
+allSeqs prs width dir slide = adjs
    where
      adjs = map (adjacents dir width) cycles
      cycles = cycleEvery slide prs
-     slide = width + dir
 
 
-seqs xs width dir = out
+seqs xs width dir slide = out
   where
     prs = pairs xs
-    out = allSeqs prs width dir
+    out = allSeqs prs width dir slide
 
 
-profiles xs width = out
+profiles xs width = p
   where
     s = seqs xs width
-    p = [(s 1), (s (-1)), (s 0)]
-    out = concat p
+    p =
+        -- Right Diagonals
+      [ (s 1 (width + 1)),
+        -- Left Diagonals
+        (s (-1) (width -1)),
+        -- Verticals
+        (s 0 width),
+        -- Horizontals
+        (s 1 1) ]
 
 
 buildSeqs xs width sampleLen = pruned
   where
     profs = profiles xs width
-    pruned = filter pruner profs
+    catted = concat profs
+    pruned = filter pruner catted
     pruner x = (length x) >= sampleLen
 
 
