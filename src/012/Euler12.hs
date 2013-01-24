@@ -48,14 +48,29 @@ module Main (
 divisors :: Int -> [Int]
 divisors 0 = [0]
 divisors 1 = [1]
-divisors n = 1 : filter ((==0) . rem n) [2..(div n 2)]
+divisors n = (1 : builder) ++ (n : [])
+  where
+    builder = filter ((==0) . rem n) [2..(div n 2)]
 
+
+--
+-- Get triangles
+--
+triangles = scanl1 (+) [1..]
+
+
+findNum x = filter isLength triDivs
+  where isLength xs = (length xs) >= x
 
 --
 -- Solve
 --
 solve :: Int
-solve = 1
+solve = x
+  where x = 500
+
+
+triDivs = map divisors triangles
         
 
 --
