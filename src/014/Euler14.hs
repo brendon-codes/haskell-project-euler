@@ -31,17 +31,18 @@
 
 
 module Main (
-  input,
+  collatz,
+  collatzSeq,
+  seqs,
+  pairs,
+  getMax,
   solve,
   main
 ) where
 
 
---
--- Input
---
-input :: String -> [Integer]
-input s = map read $ lines s
+import Data.List (maximumBy)
+import Data.Ord (comparing)
 
 
 --
@@ -52,21 +53,57 @@ collatz n
   | even n = div n 2
   | otherwise = (3 * n) + 1
 
+
+--
+-- Collatz Sequence
+--
+collatzSeq :: Int -> [Int]
+collatzSeq n = reverse $ c [n]
+  where c a@(1 : xs) = a
+        c a@(x : xs) = c ((collatz x) : a)
+
+
+--
+-- Build Sequences 
+--
+seqs n = map collatzSeq x
+  where x
+          | (n == 1) = [1]
+          | otherwise = [n,n-1..1]
+
+
+--
+-- Get starting lengths/pairs
+--
+pairs n = map prs (seqs n)
+  where prs xs = (length xs, head xs)
+
+
+--
+-- Get max
+--
+getMax prs = maximumBy (comparing fst) prs
+
+
+--
+-- Extract maximum
+--
+extract n = snd (getMax $ pairs n)
+
+
 --
 -- Solve
 --
-solve :: [Integer] -> Integer
-solve x = read $ take z $ show $ sum x
-  where z = 10
+--solve :: [Integer] -> Integer
+solve = extract n
+  where n = 1000000
+
 
 --
 -- Main
 --
 main :: IO ()
 main = do
-  x <- getContents;
-  let inp = input x;
-      out = solve inp;
-  print out;
+  print solve;
 
 
