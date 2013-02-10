@@ -36,6 +36,7 @@ module Main (
   seqs,
   pairs,
   getMax,
+  extract,
   solve,
   main
 ) where
@@ -66,6 +67,7 @@ collatzSeq n = reverse $ c [n]
 --
 -- Build Sequences 
 --
+seqs :: Int -> [[Int]]
 seqs n = map collatzSeq x
   where x
           | (n == 1) = [1]
@@ -75,6 +77,7 @@ seqs n = map collatzSeq x
 --
 -- Get starting lengths/pairs
 --
+pairs :: Int -> [(Int, Int)]
 pairs n = map prs (seqs n)
   where prs xs = (length xs, head xs)
 
@@ -82,19 +85,21 @@ pairs n = map prs (seqs n)
 --
 -- Get max
 --
+getMax :: [(Int, Int)] -> (Int, Int)
 getMax prs = maximumBy (comparing fst) prs
 
 
 --
 -- Extract maximum
 --
+extract :: Int -> Int
 extract n = snd (getMax $ pairs n)
 
 
 --
 -- Solve
 --
---solve :: [Integer] -> Integer
+solve :: Int
 solve = extract n
   where n = 1000000
 
