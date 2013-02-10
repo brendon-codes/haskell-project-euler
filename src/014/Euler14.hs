@@ -45,6 +45,14 @@ input s = map read $ lines s
 
 
 --
+-- Collatz
+--
+collatz :: Int -> Int
+collatz n
+  | even n = div n 2
+  | otherwise = (3 * n) + 1
+
+--
 -- Solve
 --
 solve :: [Integer] -> Integer
