@@ -58,6 +58,10 @@ collatz n
 --
 -- Collatz Sequence
 --
+-- TODO: Can this be made non-recursive?
+--       This is causing stack-overflow
+--       with large numbers.
+--
 collatzSeq :: Int -> [Int]
 collatzSeq n = reverse $ c [n]
   where c a@(1 : xs) = a
