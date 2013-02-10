@@ -108,11 +108,12 @@
 --       20849603980134001723930671666823555245252804609722
 --       53503534226472524250874054075591789781264330331690
 --
--- Answer: ??
+-- Answer: 5537376230
 --
 
 
 module Main (
+  input,
   solve,
   main
 ) where
@@ -121,18 +122,16 @@ module Main (
 --
 -- Input
 --
-input :: String -> String
-input s = concat $ lines s
+input :: String -> [Integer]
+input s = map read $ lines s
 
-
-toInts :: String -> [Int]
-toInts x = map (\c -> read [c]) x
 
 --
 -- Solve
 --
-solve :: String -> Int
-solve x = read $ take 10 $ show $ sum $ toInts x
+solve :: [Integer] -> Integer
+solve x = read $ take z $ show $ sum x
+  where z = 10
 
 --
 -- Main
