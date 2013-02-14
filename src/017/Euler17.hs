@@ -20,16 +20,16 @@ module Main (
 ) where
 
 
-ones = ["one",       "two",
-        "three",     "four",
-        "five",      "six",
-        "seven",     "eight",
-        "nine",      "ten",
-        "eleven",    "twelve",
-        "thirteen",  "fourteen",
-        "fifteen",   "sixteen",
-        "seventeen", "eighteen",
-        "nineteen"]
+ones = ["zero",      "one",
+        "two",       "three",
+        "four",      "five",
+        "six",       "seven",
+        "eight",     "nine",
+        "ten",       "eleven",
+        "twelve",    "thirteen",
+        "fourteen",  "fifteen",
+        "sixteen",   "seventeen",
+        "eighteen",  "nineteen"]
 
 
 tens = ["twenty", "thirty",
@@ -42,12 +42,18 @@ hun = "onehundred"
 
 thous = "onethousand"
 
+
+build x 
+  | x < 20 = ones !! x
+
+
+
+
 --
 -- Solve
 --
 solve :: Int
-solve = sum $ map (\x -> read [x]) (show $ 2^n)
-  where n = 1000
+solve = 1
 
 
 --
