@@ -39,6 +39,9 @@ module Main (
 ) where
 
 
+import Control.Parallel.Strategies
+import Control.Parallel
+
 --
 -- Get divisors of an integer
 --
@@ -62,15 +65,18 @@ triangles = scanl1 (+) [1..]
 findNum x = filter isLength triDivs
   where isLength xs = (length xs) >= x
 
+
+extract x = last $ head $ findNum x
+
 --
 -- Solve
 --
 solve :: Int
-solve = x
+solve = extract x
   where x = 500
 
 
-triDivs = map divisors triangles
+triDivs = (parMap rseq) divisors triangles
         
 
 --
