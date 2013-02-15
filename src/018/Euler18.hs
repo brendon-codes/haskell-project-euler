@@ -41,7 +41,7 @@
 -- be solved by brute force, and requires a
 -- clever method! ;o)
 --
--- Answer: ??
+-- Answer: 1074
 --
 
 
@@ -54,6 +54,9 @@ module Main (
 import Data.List
 
 
+--
+-- Initial sums for each row
+--
 merg :: [Int] -> [Int] -> [[Int]]
 merg x y = out
   where
@@ -63,6 +66,9 @@ merg x y = out
     adder v i = map (+v) (drop i y)
 
 
+--
+-- Builds pairs for each row
+--
 builder :: [[Int]] -> [[Int]]
 builder m = out
   where
@@ -76,10 +82,16 @@ builder m = out
       | otherwise = (i2 `mod` 2 == 0)
  
 
+--
+-- Finds the max from each collision pair
+--
 maxxes :: [[Int]] -> [Int]
 maxxes b = map maximum b
 
 
+--
+-- Scans through all rows
+--
 construct :: [[Int]] -> [Int]
 construct d = out
   where
@@ -87,6 +99,9 @@ construct d = out
     b x y = maxxes $ builder $ merg x y
 
 
+--
+-- Gets max from final row
+--
 getFinal :: [[Int]] -> Int
 getFinal d = out
   where
@@ -94,18 +109,16 @@ getFinal d = out
     out = maximum finals
 
 
-
+--
+-- Solver Entry Point
+--
 solve :: Int
 solve = getFinal dta
 
 
--- dta :: [[Int]]
--- dta = 
---   [[3],
---    [7, 4],
---    [2, 4, 6],
---    [8, 5, 9, 3]]
-
+--
+-- Returns Input Data List
+--
 dta :: [[Int]]
 dta =
   [[75],
