@@ -51,6 +51,9 @@ module Main (
 ) where
 
 
+import Data.List
+
+
 dta = 
   [[3],
    [7, 4],
@@ -58,6 +61,7 @@ dta =
    [8, 5, 9, 3]]
 
 
+merg :: [Int] -> [Int] -> [[Int]]
 merg x y = out
   where
     pair = zip x [0..]
@@ -65,6 +69,19 @@ merg x y = out
     build (v, i) = take 2 $ adder v i
     adder v i = map (+v) (drop i y)
 
+
+builder m = out
+  where
+    -- out t = ((head t) !! 0) : s ++ ((tail t) !! 1)
+    out = map (map fst) g
+    ln = length m
+    s = zip (concat m) [0..]
+    g = groupBy b s
+    b (v1, i1) (v2, i2) 
+      | (i1 == 0) = False
+      | (v2 == (ln - 1)) = False
+      | otherwise = (i2 `mod` 2 == 0)
+ 
 
 -- ([2, 4, 6], [8, 5, 9, 3]) = [ [(2, 8), (2, 5)], [(4, 5), (4, 9)], [(6, 9), (6, 3)] ]
 -- ([7, 4], [2, 4, 6]) = [[(7, 2) (7, 4)], [(4, 4) (4, 6)]]
