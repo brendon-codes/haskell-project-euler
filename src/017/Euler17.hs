@@ -1,14 +1,27 @@
 --
 -- Project Euler
 --
--- Problem #16
--- Power digit sum
+-- Problem #17
+-- Number letter counts
 --
---   215 = 32768 and the sum of its digits is
+--   If the numbers 1 to 5 are written out in words:
 --
---     3 + 2 + 7 + 6 + 8 = 26.
+--     one, two, three, four, five
 --
---   What is the sum of the digits of the number 2^1000?
+--   then there are
+--
+--     3 + 3 + 5 + 4 + 4 = 19
+--
+--   letters used in total.
+--
+--   If all the numbers from 1 to 1000 (one thousand) inclusive
+--   were written out in words, how many letters would be used?
+--
+--   NOTE: Do not count spaces or hyphens. For example, 342
+--   (three hundred and forty-two) contains 23 letters and 115
+--   (one hundred and fifteen) contains 20 letters. The use of
+--   "and" when writing out numbers is in compliance with
+--   British usage.
 --
 -- Answer: ??
 --
@@ -20,7 +33,7 @@ module Main (
 ) where
 
 
-ones = ["zero",      "one",
+ones = ["one",
         "two",       "three",
         "four",      "five",
         "six",       "seven",
@@ -37,16 +50,29 @@ tens = ["twenty", "thirty",
         "sixty",  "seventy",
         "eighty", "ninety"]
 
-
-hun = "onehundred"
-
-thous = "onethousand"
-
-
-build x 
-  | x < 20 = ones !! x
+andd = "and"
+hun = "hundred"
+thous = "thousand"
 
 
+comp :: Int -> String
+comp x
+  | (x < 1) =
+    error "Value must be greater than zero"
+  | (x < 20) =
+    ones !! (x - 1)
+  | (x < 100) =
+    (tens !! ((x `div` 10) - 2)) ++ (rec x)
+  | (x == 100) =
+    (ones !! 0) ++ hun
+  | (x < 1000) =
+    (ones !! ((x `div` 100) - 1)) ++ hun ++ andd ++ (rec x)
+  | (x == 1000) =
+    (ones !! 0) ++ thous
+  | otherwise =
+    error "Value must be less than or equal to 1000"
+  where
+    rec = (comp . read . tail . show)
 
 
 --
