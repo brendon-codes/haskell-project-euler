@@ -30,7 +30,7 @@
 --   What is the value of the first triangle number to have
 --   over five hundred divisors?
 --
--- Answer: ??
+-- Answer: 76576500
 --
 
 
@@ -39,44 +39,71 @@ module Main (
 ) where
 
 
-import Control.Parallel.Strategies
-import Control.Parallel
+import Data.List
+  
+--
+-- Get prime factors.
+-- I did not invent this.
+--
+-- This was taken from:
+-- http://www.haskell.org/haskellwiki/Euler_problems/1_to_10#Problem_3
+--
+primeFactors :: Int -> [Int]
+primeFactors n = factor n primes
+  where
+    primes = 2 : filter ((==1) . length . primeFactors) [3,5..]
+    factor n (p:ps) 
+        | p*p > n        = [n]
+        | n `mod` p == 0 = p : factor (n `div` p) (p:ps)
+        | otherwise      = factor n ps
+
 
 --
--- Get divisors of an integer
+-- Get number of divisors of an integer
 --
--- Partially taken from:
--- http://stackoverflow.com/a/1480620/552766
---
-divisors :: Int -> [Int]
-divisors 0 = [0]
-divisors 1 = [1]
-divisors n = (1 : builder) ++ (n : [])
+nDivisors :: Int -> Int
+nDivisors 0 = 0
+nDivisors 1 = 1
+nDivisors n = out
   where
-    builder = filter ((==0) . rem n) [2..(div n 2)]
+    p = primeFactors n
+    g = group p
+    exps = map length g
+    inc = map (+1) exps
+    out = product inc
 
 
 --
 -- Get triangles
 --
+triangles :: [Int]
 triangles = scanl1 (+) [1..]
 
 
-findNum x = filter isLength triDivs
-  where isLength xs = (length xs) >= x
+--
+-- Map number of divisors to triangles
+--
+triNDivs = map out triangles
+  where
+    out t = (t, nDivisors t)
 
 
-extract x = last $ head $ findNum x
+--
+-- Find first triangle with n == x
+--
+findNum x = out
+  where
+    out = fst $ head b
+    b = filter finder triNDivs
+    finder (t, nod) = (nod > x)
+
 
 --
 -- Solve
 --
 solve :: Int
-solve = extract x
+solve = findNum x
   where x = 500
-
-
-triDivs = (parMap rseq) divisors triangles
         
 
 --
